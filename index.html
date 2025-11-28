@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surprise! Congratulations Dr.</title>
+    <style>
+        :root {
+            --primary-color: #8e44ad; /* Purple */
+            --secondary-color: #c0392b; /* Deep Red/Magenta tone */
+            --accent-color: #e056fd; /* Magenta/Pink */
+            --bg-gradient: linear-gradient(135deg, #f3e5f5 0%, #ffebee 100%);
+            --card-bg: #ffffff;
+            --text-color: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        /* --- Password Screen Styles --- */
+        #password-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #8e44ad 0%, #c0392b 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
+
+        .login-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .login-box h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-color);
+            outline: none;
+        }
+
+        button.btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button.btn-primary:hover {
+            background: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .error-msg {
+            color: #e74c3c;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        /* --- Main Content Styles --- */
+        #main-content {
+            display: none; /* Hidden by default */
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            box-sizing: border-box;
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .section-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--accent-color);
+        }
+
+        h2.section-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        /* Letter Section */
+        .letter-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #444;
+            font-style: italic;
+        }
+
+        .signature {
+            margin-top: 20px;
+            font-weight: bold;
+            text-align: right;
+            color: var(--primary-color);
+            font-size: 1.3rem;
+        }
+
+        /* Media Players */
+        audio, video {
+            width: 100%;
+            margin-top: 10px;
+            border-radius: 8px;
+        }
+
+        video {
+            max-height: 400px;
+            background: black;
+        }
+
+        /* Gallery */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .gallery-item {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-bottom: 2rem;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            header h1 { font-size: 2rem; }
+            .section-card { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="password-screen">
+        <div class="login-box">
+            <h2>🎉 Surprise Access</h2>
+            <p>Please enter the secret code to view your surprise.</p>
+            <input type="text" id="secret-code" placeholder="Enter secret code..." onkeyup="handleEnter(event)">
+            <button class="btn-primary" onclick="checkPassword()">Unlock</button>
+            <p class="error-msg" id="error-msg">Incorrect code! Try again.</p>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <header>
+            <h1>Congratulations, Doctor! 🎓</h1>
+            <p>A special surprise prepared just for you.</p>
+        </header>
+
+        <section class="section-card">
+            <h2 class="section-title">💌 A Message for You</h2>
+            <div class="letter-content">
+                <p>Dearest Doctor,</p>
+                <p>
+                    I am absolutely thrilled to be writing this to you today. Watching you work so hard, sacrifice your sleep, and pour your heart into your studies has been nothing short of inspiring. You have finally reached this incredible milestone, and I couldn't be prouder.
+                </p>
+                <p>
+                    The world is so lucky to have a doctor as dedicated, brilliant, and kind-hearted as you. This is just the beginning of a magnificent journey. May your hands always bring healing and your smile always bring comfort.
+                </p>
+                <p>Congratulations on this monumental achievement!</p>
+                <div class="signature">
+                    With love,<br>Asma
+                </div>
+            </div>
+        </section>
+
+        <section class="section-card">
+            <h2 class="section-title">🎵 Set the Mood (Celebration Music)</h2>
+            <p>ayaan fav songs:</p>
+            
+            <audio controls>
+                <source src.="song1.mp3" type="audio/mpeg">
+                <source src="song1.ogg" type="audio/ogg">
+                Your browser does not support the audio element.
+                </audio>
+
+            <audio controls style="margin-top: 20px;">
+                <source src="song2.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+                </audio>
+        </section>
+
+        <section class="section-card">
+            <h2 class="section-title">📸 Memory Lane</h2>
+            
+            <div class="gallery-grid">
+                <img src="ayaan.jpg" alt="images" class="gallery-item">
+                
+                <img src="ayaan1.jpg" alt="images" class="gallery-item">
+                
+                <img src="ayaan2.jpg" alt="images" class="gallery-item">
+            </div>
+            <p style="text-align: center; margin-top: 15px;">*ayaan:* pretty girl.</p>
+        </section>
+
+        <section class="section-card">
+            <h2 class="section-title">🎥 Video Memories (Video Xus Ah)</h2>
+            
+            <video controls>
+                <source src="g.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+                </video>
+        </section>
+
+        <footer>
+            <p>Made with ❤ by Asma | 2025</p>
+        </footer>
+    </div>
+
+    <script>
+        // --- Password Logic ---
+        function checkPassword() {
+            const input = document.getElementById('secret-code').value;
+            const errorMsg = document.getElementById('error-msg');
+            const passwordScreen = document.getElementById('password-screen');
+            const mainContent = document.getElementById('main-content');
+
+            // Check password (case-insensitive)
+            if (input.trim().toLowerCase() === 'asma') {
+                // Fade out password screen
+                passwordScreen.style.opacity = '0';
+                setTimeout(() => {
+                    passwordScreen.style.display = 'none';
+                    mainContent.style.display = 'block';
+                }, 500);
+            } else {
+                errorMsg.style.display = 'block';
+                // Shake animation effect
+                const loginBox = document.querySelector('.login-box');
+                loginBox.style.transform = 'translateX(10px)';
+                setTimeout(() => { loginBox.style.transform = 'translateX(-10px)'; }, 100);
+                setTimeout(() => { loginBox.style.transform = 'translateX(0)'; }, 200);
+            }
+        }
+
+        function handleEnter(event) {
+            if (event.key === 'Enter') {
+                checkPassword();
+            }
+        }
+        
+        // *ayaan:* intelligent girl.
+    </script>
+</body>
+</html>
